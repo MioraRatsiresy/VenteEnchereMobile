@@ -1,0 +1,7 @@
+{
+  "name": "VenteEnchere",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
