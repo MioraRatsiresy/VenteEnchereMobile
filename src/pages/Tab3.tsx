@@ -1,11 +1,11 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import './Tab3.css';
 
-const Home: React.FC = () => {
+const Tab3: React.FC = () => {
   return (
-    <ExploreContainer name="Home" />
+    <ExploreContainer name="Rechargement" />
   );
 };
 
-export default Home;
+export default Tab3;

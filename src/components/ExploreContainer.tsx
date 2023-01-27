@@ -1,13 +1,45 @@
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonIcon } from '@ionic/react';
 import './ExploreContainer.css';
 
-interface ContainerProps { }
+import Login from './LoginComponent';
+import LoginComponent from './LoginComponent';
+import AccueilComponent from './AccueilComponent';
+import RechargementCompte from './RechargementCompte';
 
-const ExploreContainer: React.FC<ContainerProps> = () => {
+import { logOutOutline } from 'ionicons/icons';
+
+interface ContainerProps {
+  name: string;
+}
+
+const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   return (
-    <div className="container">
-      <strong>Ready to create an app?</strong>
-      <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-    </div>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonGrid>
+            <IonRow>
+              <IonTitle>Ventes aux enchères</IonTitle>
+            </IonRow>
+          </IonGrid>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen className="ion-padding ion-text-center">
+        {name === "Login" ?
+          <LoginComponent></LoginComponent>
+          : ''
+        }
+        {name === "Home" ?
+          <AccueilComponent></AccueilComponent>
+          : ''
+        }
+        {name === "Rechargement" ?
+          <RechargementCompte></RechargementCompte>
+          : ''
+        }
+        
+      </IonContent>
+    </IonPage>
   );
 };
 
