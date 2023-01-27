@@ -7,18 +7,33 @@ import {
     IonTabBar,
     IonTabButton,
     IonTabs,
-    setupIonicReact
+    setupIonicReact,
+    IonPage,
+    IonMenu,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonMenuButton,
+    IonFab,
+    IonMenuToggle,
+    IonFabButton,
+    IonButton
 } from '@ionic/react';
+import { IonItem, IonList } from '@ionic/react';
 import React, { useState } from 'react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline } from 'ionicons/icons';
+import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add } from 'ionicons/icons';
 import Tab1 from '../pages/Tab1';
 import Tab2 from '../pages/Tab2';
 import Tab3 from '../pages/Tab3';
 import Login from '../pages/Login'
 
 const AccueilComponent: React.FC = () => {
-    const [page, setPage] = useState(0);
+    const [deconnecte, setDeconnecte] = useState(0);
+    const [rechargement, setRechargement] = useState(0);
+    const [isOpen, setIsOpen] = useState(true);
 
     function logout() {
         const xmlhttp = new XMLHttpRequest();
@@ -27,7 +42,7 @@ const AccueilComponent: React.FC = () => {
                 var retour = JSON.parse(this.responseText);
                 if (retour['message'] === "Logout with success") {
                     sessionStorage.clear();
-                    setPage(1);
+                    setDeconnecte(1);
                 }
                 else {
                 }
@@ -37,40 +52,70 @@ const AccueilComponent: React.FC = () => {
         xmlhttp.send();
     }
 
+    function ViewRechargement() {
+        console.log("Lol");
+        setRechargement(1);
+        setIsOpen(false);
+    }
+
     return (
         <>
-            {page === 0 ?
-                <IonReactRouter>
-                    <IonTabs>
-                        <IonRouterOutlet>
-                            <Route exact path="/tab1">
-                                <Tab1 />
-                            </Route>
-                            <Route exact path="/tab2">
-                                <Tab2 />
-                            </Route>
-                            <Route path="/tab3">
-                                <Tab3 />
-                            </Route>
-                            <Route exact path="/">
-                                <Redirect to="/tab1" />
-                            </Route>
-                        </IonRouterOutlet>
-                        <IonTabBar slot="bottom"><IonTabButton tab="tab2" href="/tab2">
-                            <IonIcon icon={cashOutline} />
-                        </IonTabButton>
-                            <IonTabButton tab="tab3" href="/tab3">
-                                <IonIcon icon={home} />
+            {
+                deconnecte === 0 ?
+                    <>
+                        <IonMenu contentId="main-content" >
+                            <IonHeader>
+                                <IonToolbar>
+                                    <IonTitle>Menu</IonTitle>
+                                </IonToolbar>
+                            </IonHeader>
+                            <IonContent>
+                                <IonList>
+                                    <IonItem>
+                                        <IonMenuToggle>
+                                            <IonLabel onClick={ViewRechargement}>Rechargement</IonLabel>
+                                        </IonMenuToggle>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel>Mes enchères</IonLabel>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel onClick={logout}>Log out</IonLabel>
+                                    </IonItem>
+                                    <IonMenuToggle>
+                                        <IonButton>Close menu</IonButton>
+                                    </IonMenuToggle>  
+                                </IonList>
+                            </IonContent>
+                        </IonMenu>
+                        <div id="main-content">
+                            <IonHeader>
+                                <IonToolbar>
+                                    <IonButtons slot="start" >
+                                        <IonMenuButton></IonMenuButton>
+                                    </IonButtons>
+                                    <IonTitle>Ventes aux enchères</IonTitle>
+                                </IonToolbar>
+                            </IonHeader>
+                            <h1></h1>
+                        </div>
+                        <IonContent>
+                            <div>
+                                {
+                                    rechargement === 1 ?
+                                        <Tab2 />
+                                        : ''
+                                }
+                                <IonFab slot="start" vertical="center" horizontal="end">
+                                    <IonFabButton>
+                                    <IonIcon icon={add}></IonIcon>
+                                    </IonFabButton>
+                                </IonFab>
 
-                            </IonTabButton>
-                            <IonTabButton tab="tab1" onClick={logout}>
-                                <IonIcon icon={logOutOutline} />
-                            </IonTabButton>
-                        </IonTabBar>
-                    </IonTabs>
-                </IonReactRouter>
-                :
-                <Login />
+                            </div>
+                        </IonContent>
+                    </>
+                    : <Login />
             }
         </>
     );

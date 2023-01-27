@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonIcon, IonFab, IonFabButton } from '@ionic/react';
 import './ExploreContainer.css';
 
 import Login from './LoginComponent';
@@ -6,7 +6,7 @@ import LoginComponent from './LoginComponent';
 import AccueilComponent from './AccueilComponent';
 import RechargementCompte from './RechargementCompte';
 
-import { logOutOutline } from 'ionicons/icons';
+import { logOutOutline, add } from 'ionicons/icons';
 
 interface ContainerProps {
   name: string;
@@ -15,16 +15,8 @@ interface ContainerProps {
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonGrid>
-            <IonRow>
-              <IonTitle>Ventes aux enchères</IonTitle>
-            </IonRow>
-          </IonGrid>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen className="ion-padding ion-text-center">
+    {sessionStorage.getItem("TokenUtilisateur") != null ?
+      <IonContent fullscreen className="ion-padding ion-text-center" >
         {name === "Login" ?
           <LoginComponent></LoginComponent>
           : ''
@@ -37,8 +29,9 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
           <RechargementCompte></RechargementCompte>
           : ''
         }
-        
       </IonContent>
+      :<Login/>
+      }
     </IonPage>
   );
 };
