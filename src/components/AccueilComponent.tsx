@@ -24,12 +24,18 @@ import {
     IonCardContent,
     IonCardSubtitle,
     IonCardHeader,
-    IonCardTitle
+    IonCardTitle,
+    IonModal,
+    IonChip,
+    IonThumbnail,
+    IonSelectOption,
+    IonSelect,
+    IonInput
 } from '@ionic/react';
 import { IonItem, IonList } from '@ionic/react';
 import { useState } from 'react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add } from 'ionicons/icons';
+import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add, closeCircleOutline, camera } from 'ionicons/icons';
 import Tab1 from '../pages/Tab1';
 import Tab2 from '../pages/Tab2';
 import Tab3 from '../pages/Tab3';
@@ -38,11 +44,20 @@ import axios from 'axios';
 import ListeComponent from './ListeComponent';
 import MesEncheres from '../modele/MesEncheres';
 
-const AccueilComponent  = () => {
+const AccueilComponent = () => {
     const [deconnecte, setDeconnecte] = useState(0);
     const [rechargement, setRechargement] = useState(0);
     const [liste, setListe] = useState(0);
-    const [mesEncheres, setMesEncheres] = useState<any | null>(null); 
+    const [mesEncheres, setMesEncheres] = useState<any | null>(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    function openModal() {
+        setIsOpen(true);
+    }
 
     function logout() {
         const xmlhttp = new XMLHttpRequest();
@@ -73,9 +88,9 @@ const AccueilComponent  = () => {
         setListe(1);
         axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             //setMesEncheres(response.data["mesEncheres"]);
-           // console.log(response.data["mesEncheres"][0]["categorie"]);
-            var listeEnchere =  Array();
-           // console.log(response.data["mesEncheres"][0]["idEnchere"]);
+            // console.log(response.data["mesEncheres"][0]["categorie"]);
+            var listeEnchere = Array();
+            // console.log(response.data["mesEncheres"][0]["idEnchere"]);
             for (var item = 0; item < response.data["mesEncheres"].length; item++) {
                 listeEnchere[item] = new MesEncheres();
                 listeEnchere[item].idEnchere = response.data["mesEncheres"][item]["idEnchere"];
@@ -87,7 +102,7 @@ const AccueilComponent  = () => {
                 //setMesEncheres(listeEnchere[item]);
             }
             setMesEncheres(listeEnchere);
-            if(mesEncheres==null){
+            if (mesEncheres == null) {
                 console.log("Tsisy");
             }
             /*else{
@@ -159,7 +174,7 @@ const AccueilComponent  = () => {
                                         </>
                                         : ''
                                 }
-                                <IonFab slot="start" vertical="center" horizontal="end">
+                                <IonFab slot="start" vertical="center" horizontal="end" onClick={openModal}>
                                     <IonFabButton>
                                         <IonIcon icon={add}></IonIcon>
                                     </IonFabButton>
@@ -170,6 +185,66 @@ const AccueilComponent  = () => {
                     </>
                     : <Login />
             }
+            <IonModal isOpen={isOpen}>
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>Nouvelle enchère</IonTitle>
+                        <IonButtons slot="end">
+                            <IonButton onClick={closeModal}>
+                                <IonIcon icon={closeCircleOutline}></IonIcon>
+                            </IonButton>
+                        </IonButtons>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent className="ion-padding">
+
+
+                    <IonItem>
+                        <IonFab slot="start" vertical="center" horizontal="end" onClick={openModal}>
+                            <IonFabButton>
+
+                                <IonIcon icon={camera}></IonIcon>
+
+                            </IonFabButton>
+                        </IonFab>
+                    </IonItem>
+
+
+                    <IonItem>
+                        <IonLabel><b>Catégorie :</b></IonLabel>
+                        <IonSelect placeholder="Catégorie">
+                            <IonSelectOption value="1">1 mois</IonSelectOption>
+                            <IonSelectOption value="2">3 mois</IonSelectOption>
+                        </IonSelect>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel><b>Produit :</b></IonLabel>
+                        <IonSelect placeholder="Produit">
+                            <IonSelectOption value="1">1 mois</IonSelectOption>
+                            <IonSelectOption value="2">3 mois</IonSelectOption>
+                        </IonSelect>
+                    </IonItem>
+
+
+
+                    <IonItem>
+                        <IonLabel position="floating">Libelle</IonLabel>
+                        <IonInput type="text"></IonInput>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel position="floating">Prix minimum</IonLabel>
+                        <IonInput type="number"></IonInput>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel position="floating">Durée</IonLabel>
+                        <IonInput type="number"></IonInput>
+                    </IonItem>
+
+                    <IonButton color="success" expand="block">Valider</IonButton>
+
+
+                </IonContent>
+            </IonModal>
         </>
     );
 };
