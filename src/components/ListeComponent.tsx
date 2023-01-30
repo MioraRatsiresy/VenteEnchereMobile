@@ -46,12 +46,28 @@ import MesEncheres from '../modele/MesEncheres';
 const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
     const [nullite, setNullite] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
+    const [info, setInfo] = useState<any | null>(null);
+    const [photos, setPhotos] = useState<any | null>(null);
 
     function closeModal() {
         setIsOpen(false);
     }
 
-    function openModal() {
+    function openModal(idEnchere: number) {
+        console.log("idEnchere : " + idEnchere);
+        axios.get("http://localhost:4444/infoEnchere/" + idEnchere + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+            setInfo(response.data["infoEnchere"]);
+            if (info != null) {
+                console.log(info[0].libelle);
+            }
+        });
+        axios.get("http://localhost:4444/getPhotoEnchere/" + idEnchere).then((response) => {
+            setPhotos(response.data["photo"]);
+            if (photos != null) {
+                console.log("null");
+                console.log(photos[0].photo);
+            }
+        });
         setIsOpen(true);
     }
 
@@ -74,7 +90,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                         mesEncheres ?.map((value1: string, j: number) => {
                             return (
                                 <div key={j}>
-                                    <IonCard color="light">
+                                    <IonCard color="warning">
                                         <IonCardHeader>
                                             <IonCardTitle><b>{mesEncheres[j].libelle}</b></IonCardTitle>
                                             <IonCardSubtitle><b>Produit :</b>{mesEncheres[j].produitEnchere},{mesEncheres[j].categorie}</IonCardSubtitle>
@@ -83,7 +99,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                                         <IonCardContent>
                                             <IonCardSubtitle><b>Date début :</b>{mesEncheres[j].dateHeure}</IonCardSubtitle>
                                             <IonCardSubtitle><b>Date fin :</b>{mesEncheres[j].dateFin}</IonCardSubtitle>
-                                            <IonButton color="secondary" onClick={openModal}>Détails</IonButton>
+                                            <IonButton color="secondary" onClick={() => openModal(mesEncheres[j].idEnchere)}>Détails</IonButton>
                                         </IonCardContent>
                                     </IonCard>
                                 </div>
@@ -92,6 +108,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                 </div>
                 : <Login />
             }
+
             <IonModal isOpen={isOpen}>
                 <IonHeader>
                     <IonToolbar>
@@ -104,54 +121,59 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                     </IonToolbar>
                 </IonHeader>
                 <IonContent className="ion-padding">
-                    <IonCard>
-                        <img alt="Silhouette of mountains" src="assets/image/image2.jpg" />
-                        <IonItem>
-                            <IonThumbnail slot="start">
-                                <img alt="Silhouette of mountains" src="assets/image/image2.jpg" />
-                            </IonThumbnail>
-                            <IonThumbnail slot="start">
-                                <img alt="Silhouette of mountains" src="assets/image/image2.jpg" />
-                            </IonThumbnail>
-                            <IonThumbnail slot="start">
-                                <img alt="Silhouette of mountains" src="assets/image/image2.jpg" />
-                            </IonThumbnail>
-                        </IonItem>
-                        <IonCardHeader>
-                            <IonItem>
-                                <IonCardTitle><b>Bac à litière</b></IonCardTitle>
-                            </IonItem>
-                            <IonItem>
-                                <IonCardSubtitle>Chat, Animalerie</IonCardSubtitle>
-                            </IonItem>
-                        </IonCardHeader>
+                    {
+                        info != null ?
+                            <IonCard>
+                                {photos ?.map((value1: string, j: number) => {
+                                    return (
+                                        <div key={j}>
+                                            { j===0 ?
+                                            <img alt="Silhouette of mountains" src={photos[j]["photo"]} />
+                                            :
+                                            <IonItem>
+                                                <IonThumbnail slot="start">
+                                                    <img alt="Silhouette of mountains" src={photos[j]["photo"]} />
+                                                </IonThumbnail>
+                                            </IonItem>
+                                            }
+                                        </div>
+                                    )
+                                })}
+                                <IonCardHeader>
+                                    <IonItem>
+                                        <IonCardTitle><b>{info[0].libelle}</b></IonCardTitle>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonCardSubtitle>{info[0].produitEnchere}, {info[0].categorie}</IonCardSubtitle>
+                                    </IonItem>
+                                </IonCardHeader>
 
-                        <IonCardContent>
-                            <IonItem>
-                                <IonLabel><b>Date début :</b></IonLabel>
-                            </IonItem>
-                            <IonItem>
-                                <IonLabel><b>Date fin :</b></IonLabel>
-                            </IonItem>
-                            <IonItem>
-                                <IonLabel><b>Prix minimum :</b></IonLabel>
-                            </IonItem>
-                            <IonItem>
-                                <IonLabel><b>Durée :</b></IonLabel>
-                            </IonItem>
-                            <IonItem>
-                                <IonLabel><b>Statut :</b></IonLabel>
-                            </IonItem>
-                            <IonItem>
-                                <IonLabel><b>Lead :</b></IonLabel>
-                            </IonItem>
-                            <IonItem>
-                                <IonLabel><b>Montant :</b></IonLabel>
-                            </IonItem>
-                        </IonCardContent>
-                    </IonCard>
+                                <IonCardContent>
+                                    <IonItem>
+                                        <IonLabel><b>Date début :</b>{info[0].dateHeure}</IonLabel>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel><b>Date fin :</b>{info[0].dateFin}</IonLabel>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel><b>Prix minimum :</b>{info[0].prixMin}</IonLabel>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel><b>Durée :</b>{info[0].duree} j.</IonLabel>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel><b>Statut :</b>{info[0].statut}</IonLabel>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel><b>Montant :</b>{info[0].montant}</IonLabel>
+                                    </IonItem>
+                                </IonCardContent>
+                            </IonCard>
+                            : ''
+                    }
                 </IonContent>
             </IonModal>
+
         </>
     );
 };

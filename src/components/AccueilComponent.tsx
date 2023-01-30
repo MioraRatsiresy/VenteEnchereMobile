@@ -50,12 +50,22 @@ const AccueilComponent = () => {
     const [liste, setListe] = useState(0);
     const [mesEncheres, setMesEncheres] = useState<any | null>(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [categorie, setCategorie] = useState<any | null>(null);
+    const [inputs, setInputs] = useState({});
+    const [produit, setProduit] = useState<any | null>(null);
+    const [succes, setSucces] = useState(0);
 
     function closeModal() {
         setIsOpen(false);
     }
 
     function openModal() {
+        axios.get("http://localhost:4444/listecategorie").then((response) => {
+            setCategorie(response.data["categorie"]);
+            if (categorie != null) {
+                console.log(categorie[0]["categorie"]);
+            }
+        });
         setIsOpen(true);
     }
 
@@ -105,12 +115,52 @@ const AccueilComponent = () => {
             if (mesEncheres == null) {
                 console.log("Tsisy");
             }
-            /*else{
-                console.log("Misy: "+mesEncheres[0]["libelle"]);
-            }*/
-            //setMesEncheres(listeEnchere);
-            //console.log("Mes encheres : "+mesEncheres[0].libelle);
-            //console.log("State : "+mesEncheres);
+        })
+    }
+
+    function getProduitByCategorie(id: number) {
+        axios.get("http://localhost:4444/getProduitByCategorie/" + id).then((response) => {
+            setProduit(response.data["produit"]);
+        });
+    }
+
+    const handleChange = (event: any) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs(values => ({ ...values, [name]: value }));
+        if (name == "categorie") {
+            getProduitByCategorie(value);
+        }
+        if (produit == null) {
+            console.log("Hi");
+        }
+    }
+
+    const handleSubmit = (event: any) => {
+        event.preventDefault();
+        axios.post("http://localhost:4444/insertEnchere/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur"), null, { params: inputs }).then((response) => {
+            console.log("OK");
+            setIsOpen(false);
+            axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+            //setMesEncheres(response.data["mesEncheres"]);
+            // console.log(response.data["mesEncheres"][0]["categorie"]);
+            var listeEnchere = Array();
+            // console.log(response.data["mesEncheres"][0]["idEnchere"]);
+            for (var item = 0; item < response.data["mesEncheres"].length; item++) {
+                listeEnchere[item] = new MesEncheres();
+                listeEnchere[item].idEnchere = response.data["mesEncheres"][item]["idEnchere"];
+                listeEnchere[item].libelle = response.data["mesEncheres"][item]["libelle"];
+                listeEnchere[item].categorie = response.data["mesEncheres"][item]["categorie"];
+                listeEnchere[item].dateHeure = response.data["mesEncheres"][item]["dateHeure"];
+                listeEnchere[item].dateFin = response.data["mesEncheres"][item]["dateFin"];
+                listeEnchere[item].produitEnchere = response.data["mesEncheres"][item]["produitEnchere"];
+                //setMesEncheres(listeEnchere[item]);
+            }
+            setMesEncheres(listeEnchere);
+            if (mesEncheres == null) {
+                console.log("Tsisy");
+            }
+        })
         })
     }
 
@@ -198,51 +248,58 @@ const AccueilComponent = () => {
                 </IonHeader>
                 <IonContent className="ion-padding">
 
+                    <form onSubmit={handleSubmit}>
+                        <IonItem>
+                            <IonFab slot="start" vertical="center" horizontal="end" onClick={openModal}>
+                                <IonFabButton>
 
-                    <IonItem>
-                        <IonFab slot="start" vertical="center" horizontal="end" onClick={openModal}>
-                            <IonFabButton>
+                                    <IonIcon icon={camera}></IonIcon>
 
-                                <IonIcon icon={camera}></IonIcon>
-
-                            </IonFabButton>
-                        </IonFab>
-                    </IonItem>
-
-
-                    <IonItem>
-                        <IonLabel><b>Catégorie :</b></IonLabel>
-                        <IonSelect placeholder="Catégorie">
-                            <IonSelectOption value="1">1 mois</IonSelectOption>
-                            <IonSelectOption value="2">3 mois</IonSelectOption>
-                        </IonSelect>
-                    </IonItem>
-                    <IonItem>
-                        <IonLabel><b>Produit :</b></IonLabel>
-                        <IonSelect placeholder="Produit">
-                            <IonSelectOption value="1">1 mois</IonSelectOption>
-                            <IonSelectOption value="2">3 mois</IonSelectOption>
-                        </IonSelect>
-                    </IonItem>
+                                </IonFabButton>
+                            </IonFab>
+                        </IonItem>
 
 
+                        <IonItem>
+                            <IonLabel><b>Catégorie :</b></IonLabel>
+                            <IonSelect placeholder="Catégorie" name="categorie" onIonChange={handleChange}>
+                                {categorie ?.map((value1: string, j: number) => {
+                                    return (
+                                        <div key={j}>
+                                            <IonSelectOption value={categorie[j]["id"]}>{categorie[j]["categorie"]}</IonSelectOption>
+                                        </div>
+                                    )
+                                })}
+                            </IonSelect>
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel><b>Produit :</b></IonLabel>
+                            <IonSelect placeholder="Produit" name="produit" onIonChange={handleChange}>
+                                {produit ?.map((value1: string, j: number) => {
+                                    return (
+                                        <div key={j}>
+                                            <IonSelectOption value={produit[j]["id"]}>{produit[j]["produit"]}</IonSelectOption>
+                                        </div>
+                                    )
+                                })}
+                            </IonSelect>
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel position="floating">Libelle</IonLabel>
+                            <IonInput type="text" name="libelle" onIonChange={handleChange}></IonInput>
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel position="floating">Prix minimum</IonLabel>
+                            <IonInput type="number" name="prixMin" onIonChange={handleChange}></IonInput>
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel position="floating">Durée</IonLabel>
+                            <IonInput type="number" name="duree" onIonChange={handleChange}></IonInput>
+                        </IonItem>
 
-                    <IonItem>
-                        <IonLabel position="floating">Libelle</IonLabel>
-                        <IonInput type="text"></IonInput>
-                    </IonItem>
-                    <IonItem>
-                        <IonLabel position="floating">Prix minimum</IonLabel>
-                        <IonInput type="number"></IonInput>
-                    </IonItem>
-                    <IonItem>
-                        <IonLabel position="floating">Durée</IonLabel>
-                        <IonInput type="number"></IonInput>
-                    </IonItem>
+                        <IonButton color="success" expand="block" type="submit">Valider</IonButton>
 
-                    <IonButton color="success" expand="block">Valider</IonButton>
-
-
+                    </form>
                 </IonContent>
             </IonModal>
         </>
