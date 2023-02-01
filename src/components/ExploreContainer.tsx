@@ -9,6 +9,7 @@ import RechargementCompte from './RechargementCompte';
 import ListeComponent from './ListeComponent';
 import axios from 'axios';
 import MesEncheres from '../modele/MesEncheres';
+import Tab3 from '../pages/Tab3';
 
 import { logOutOutline, add } from 'ionicons/icons';
 
@@ -35,6 +36,10 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
           }
           {name === "Rechargement" ?
             <RechargementCompte></RechargementCompte>
+            : ''
+          }
+          {name === "Liste" ?
+            <Tab3 />
             : ''
           }
         </IonContent>
