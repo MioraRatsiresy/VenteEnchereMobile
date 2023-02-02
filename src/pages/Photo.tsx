@@ -114,13 +114,13 @@ export interface UserPhoto {
 
 export function test(base64image: string, id: number) {
     console.log("Ity ilay sary : " + base64image);
-    fetch(`http://192.168.150.182:4444/insertPhoto/`+sessionStorage.getItem("idUser")+`/` + sessionStorage.getItem("TokenUtilisateur"), {
+    fetch(`http://localhost:4444/insertPhoto/`+sessionStorage.getItem("idUser")+`/` + sessionStorage.getItem("TokenUtilisateur"), {
             method: 'POST',
             body: base64image
         }
     );
     console.log("Eto");
-    // axios.post('http://192.168.150.182:4444/insertPhoto/1/' + sessionStorage.getItem("TokenUtilisateur")+"/"+base64image).then((res) => {
+    // axios.post('http://localhost:4444/insertPhoto/1/' + sessionStorage.getItem("TokenUtilisateur")+"/"+base64image).then((res) => {
     //     console.log(res);
     // });
 }

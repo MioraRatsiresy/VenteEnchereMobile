@@ -61,13 +61,13 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
 
     function openModal(idEnchere: number) {
         console.log("idEnchere : " + idEnchere);
-        axios.get("http://192.168.150.182:4444/infoEnchere/" + idEnchere + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+        axios.get("http://localhost:4444/infoEnchere/" + idEnchere + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             setInfo(response.data["infoEnchere"]);
             if (info != null) {
                 console.log(info[0].libelle);
             }
         });
-        axios.get("http://192.168.150.182:4444/getPhotoEnchere/" + idEnchere).then((response) => {
+        axios.get("http://localhost:4444/getPhotoEnchere/" + idEnchere).then((response) => {
             setPhotos(response.data["photo"]);
             if (photos1 != null) {
                 console.log("null");

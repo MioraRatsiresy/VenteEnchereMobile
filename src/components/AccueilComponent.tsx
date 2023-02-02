@@ -30,12 +30,15 @@ import {
     IonThumbnail,
     IonSelectOption,
     IonSelect,
-    IonInput
+    IonInput,
+    IonGrid,
+    IonCol,
+    IonRow
 } from '@ionic/react';
 import { IonItem, IonList } from '@ionic/react';
 import { useState } from 'react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add, closeCircleOutline, camera } from 'ionicons/icons';
+import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add, closeCircleOutline, camera, personCircle } from 'ionicons/icons';
 import Tab1 from '../pages/Tab1';
 import Tab2 from '../pages/Tab2';
 import Tab3 from '../pages/Tab3';
@@ -44,6 +47,7 @@ import axios from 'axios';
 import ListeComponent from './ListeComponent';
 import MesEncheres from '../modele/MesEncheres';
 import { usePhotoGallery } from '../pages/Photo';
+import Profile from './Profile';
 
 const AccueilComponent = () => {
     const [deconnecte, setDeconnecte] = useState(0);
@@ -57,8 +61,11 @@ const AccueilComponent = () => {
     const [succes, setSucces] = useState(0);
     const { photos, takePhoto } = usePhotoGallery();
     const [cameraPhoto, setCamera] = useState(0);
+    const [profile, setProfile] = useState(0);
+    const [monProfile, setMonProfile] = useState<any | null>(null);
+    const [solde, setSolde] = useState<any | null>(null);
 
-    function openCamera(){
+    function openCamera() {
         console.log("Camera");
         //setCamera(1);
         //setIsOpen(false);
@@ -69,13 +76,15 @@ const AccueilComponent = () => {
     }
 
     function openModal() {
-        axios.get("http://192.168.150.182:4444/listecategorie").then((response) => {
+        axios.get("http://localhost:4444/listecategorie").then((response) => {
             setCategorie(response.data["categorie"]);
+            console.log("Categorie : "+response.data["categorie"][0]["categorie"]);
             if (categorie != null) {
                 console.log(categorie[0]["categorie"]);
             }
         });
         setIsOpen(true);
+        
     }
 
     function logout() {
@@ -91,7 +100,7 @@ const AccueilComponent = () => {
                 }
             }
         }
-        xmlhttp.open("GET", "http://192.168.150.182:4444/deconnexion");
+        xmlhttp.open("GET", "http://localhost:4444/deconnexion");
         xmlhttp.send();
     }
 
@@ -99,13 +108,15 @@ const AccueilComponent = () => {
         console.log("Lol");
         setRechargement(1);
         setListe(0);
+        setProfile(0);
     }
 
     function ViewMesEncheres() {
         console.log("Mes enchères");
         setRechargement(0);
         setListe(1);
-        axios.get("http://192.168.150.182:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+        setProfile(0);
+        axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             //setMesEncheres(response.data["mesEncheres"]);
             // console.log(response.data["mesEncheres"][0]["categorie"]);
             var listeEnchere = Array();
@@ -128,7 +139,7 @@ const AccueilComponent = () => {
     }
 
     function getProduitByCategorie(id: number) {
-        axios.get("http://192.168.150.182:4444/getProduitByCategorie/" + id).then((response) => {
+        axios.get("http://localhost:4444/getProduitByCategorie/" + id).then((response) => {
             setProduit(response.data["produit"]);
         });
     }
@@ -147,10 +158,10 @@ const AccueilComponent = () => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        axios.post("http://192.168.150.182:4444/insertEnchere/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur"), null, { params: inputs }).then((response) => {
+        axios.post("http://localhost:4444/insertEnchere/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur"), null, { params: inputs }).then((response) => {
             console.log("OK");
             setIsOpen(false);
-            axios.get("http://192.168.150.182:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+            axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
                 //setMesEncheres(response.data["mesEncheres"]);
                 // console.log(response.data["mesEncheres"][0]["categorie"]);
                 var listeEnchere = Array();
@@ -171,6 +182,25 @@ const AccueilComponent = () => {
                 }
             })
         })
+    }
+
+    function ViewProfile(){
+        console.log("Profile");
+        axios.get("http://localhost:4444/getClientById/"+sessionStorage.getItem("idUser")+"/"+sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+            setMonProfile(response.data["client"]);
+            console.log("Personne : "+response.data["client"][0]["prenom"]);
+        });
+        axios.get("http://localhost:4444/getSoldeClient/"+sessionStorage.getItem("idUser")).then((response) => {
+            setSolde(response.data["solde"]);
+            console.log("Solde : "+response.data["solde"][0]["solde"]);
+        });
+        setRechargement(0);
+        setListe(0);
+        setProfile(1);
+    }
+
+    const handleSearch = (event: any) => {
+        console.log("Search here...");
     }
 
     return (
@@ -197,6 +227,12 @@ const AccueilComponent = () => {
                                         </IonMenuToggle>
                                     </IonItem>
                                     <IonItem>
+                                        <IonMenuToggle>
+                                            <IonLabel onClick={ViewProfile}>Profile</IonLabel>
+                                        </IonMenuToggle>
+                                    </IonItem>
+        
+                                    <IonItem>
                                         <IonLabel onClick={logout}>Log out</IonLabel>
                                     </IonItem>
                                     <IonMenuToggle>
@@ -211,10 +247,16 @@ const AccueilComponent = () => {
                                     <IonButtons slot="start" >
                                         <IonMenuButton></IonMenuButton>
                                     </IonButtons>
-                                    <IonTitle>Ventes aux enchères</IonTitle>
+                                    <IonGrid>
+                                        <IonRow>
+                                            <IonCol>
+                                                <IonTitle>Ventes aux enchères</IonTitle>
+                                            </IonCol>
+                                        </IonRow>
+                                    </IonGrid>
                                 </IonToolbar>
                                 <IonToolbar>
-                                    <IonSearchbar></IonSearchbar>
+                                    <IonSearchbar name="mot" onIonChange={handleSearch}></IonSearchbar>
                                 </IonToolbar>
                             </IonHeader>
                             <h1></h1>
@@ -232,6 +274,13 @@ const AccueilComponent = () => {
                                             <ListeComponent mesEncheres={mesEncheres}></ListeComponent>
                                         </>
                                         : ''
+                                }
+                                {
+                                    profile === 1 ?
+                                    <>
+                                        <Profile profile={monProfile} solde={solde}></Profile>
+                                    </>
+                                    :''
                                 }
                                 <IonFab slot="start" vertical="center" horizontal="end" onClick={openModal}>
                                     <IonFabButton>
@@ -258,7 +307,7 @@ const AccueilComponent = () => {
                 <IonContent className="ion-padding">
 
                     <form onSubmit={handleSubmit}>
-                        
+
 
 
                         <IonItem>

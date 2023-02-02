@@ -52,7 +52,7 @@ const AccueilComponent: React.FC = () => {
             })
             setMontant("");
         } else {
-            axios.post("http://192.168.150.182:4444/rechargermoncompte/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur") + "?montant=" + montant).then((response) => {
+            axios.post("http://localhost:4444/rechargermoncompte/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur") + "?montant=" + montant).then((response) => {
                 setMontant("");
                 console.log("Id utilisateur : " + sessionStorage.getItem("idUser"));
                 presentToast({

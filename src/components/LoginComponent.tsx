@@ -31,7 +31,7 @@ const LoginComponent: React.FC = () => {
     function validerFormulaire() {
         try {
             //alert("Coord " + x + " " + y);
-            axios.post("http://192.168.150.182:4444/login/traitementClient?identifiant=" + email + "&pwd=" + pwd).then((response) => {
+            axios.post("http://localhost:4444/login/traitementClient?identifiant=" + email + "&pwd=" + pwd).then((response) => {
                 if (response.data['message'] === "Login correcte") {
                     sessionStorage.setItem("TokenUtilisateur", response.data['token']);
                     sessionStorage.setItem("idUser", response.data['iduser']);
@@ -80,7 +80,7 @@ const LoginComponent: React.FC = () => {
 
     function validerInscription() {
         if (nom != null && prenom != null && contact != null && identifiant != null && mdp != null) {
-            axios.post("http://192.168.150.182:4444/inscriptionClient?nom="+nom+"&prenom="+prenom+"&contact="+contact+"&identifiant=" + identifiant + "&pwd=" + mdp).then((response) => {
+            axios.post("http://localhost:4444/inscriptionClient?nom="+nom+"&prenom="+prenom+"&contact="+contact+"&identifiant=" + identifiant + "&pwd=" + mdp).then((response) => {
                 sessionStorage.setItem("TokenUtilisateur", response.data['token']);
                 sessionStorage.setItem("idUser", response.data['iduser']);
                 setPage(1);
