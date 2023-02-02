@@ -47,6 +47,7 @@ import axios from 'axios';
 import ListeComponent from './ListeComponent';
 import MesEncheres from '../modele/MesEncheres';
 import Profile from './Profile';
+import './AccueilComponent.css';
 
 const AccueilComponent = () => {
     const [deconnecte, setDeconnecte] = useState(0);
@@ -62,6 +63,7 @@ const AccueilComponent = () => {
     const [profile, setProfile] = useState(0);
     const [monProfile, setMonProfile] = useState<any | null>(null);
     const [solde, setSolde] = useState<any | null>(null);
+    const [accueil, setAccueil] = useState(0);
 
     function openCamera() {
         console.log("Camera");
@@ -76,13 +78,13 @@ const AccueilComponent = () => {
     function openModal() {
         axios.get("http://localhost:4444/listecategorie").then((response) => {
             setCategorie(response.data["categorie"]);
-            console.log("Categorie : "+response.data["categorie"][0]["categorie"]);
+            console.log("Categorie : " + response.data["categorie"][0]["categorie"]);
             if (categorie != null) {
                 console.log(categorie[0]["categorie"]);
             }
         });
         setIsOpen(true);
-        
+
     }
 
     function logout() {
@@ -107,6 +109,7 @@ const AccueilComponent = () => {
         setRechargement(1);
         setListe(0);
         setProfile(0);
+        setAccueil(1);
     }
 
     function ViewMesEncheres() {
@@ -114,6 +117,7 @@ const AccueilComponent = () => {
         setRechargement(0);
         setListe(1);
         setProfile(0);
+        setAccueil(1);
         axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             //setMesEncheres(response.data["mesEncheres"]);
             // console.log(response.data["mesEncheres"][0]["categorie"]);
@@ -176,29 +180,59 @@ const AccueilComponent = () => {
                 }
                 setMesEncheres(listeEnchere);
                 if (mesEncheres == null) {
-                    console.log("Tsisy");
+                    //console.log("Tsisy");
+                    console.log("Valeur à rechercher: " + event.target.value);
                 }
             })
         })
     }
 
-    function ViewProfile(){
+    function ViewProfile() {
         console.log("Profile");
-        axios.get("http://localhost:4444/getClientById/"+sessionStorage.getItem("idUser")+"/"+sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+        axios.get("http://localhost:4444/getClientById/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             setMonProfile(response.data["client"]);
-            console.log("Personne : "+response.data["client"][0]["prenom"]);
+            console.log("Personne : " + response.data["client"][0]["prenom"]);
         });
-        axios.get("http://localhost:4444/getSoldeClient/"+sessionStorage.getItem("idUser")).then((response) => {
+        axios.get("http://localhost:4444/getSoldeClient/" + sessionStorage.getItem("idUser")).then((response) => {
             setSolde(response.data["solde"]);
-            console.log("Solde : "+response.data["solde"][0]["solde"]);
+            console.log("Solde : " + response.data["solde"][0]["solde"]);
         });
         setRechargement(0);
         setListe(0);
         setProfile(1);
+        setAccueil(1);
     }
 
     const handleSearch = (event: any) => {
-        console.log("Search here...");
+        const val = event.target.value;
+        console.log(val);
+        axios.get("http://localhost:4444/rechercheAvanceFront", { params: { "search": val } }).then((response) => {
+            var listeEnchere = Array();
+            console.log(response.data["enchere"]);
+            for (var item = 0; item < response.data["enchere"].length; item++) {
+                listeEnchere[item] = new MesEncheres();
+                listeEnchere[item].idEnchere = response.data["enchere"][item]["idEnchere"];
+                listeEnchere[item].libelle = response.data["enchere"][item]["libelle"];
+                listeEnchere[item].categorie = response.data["enchere"][item]["categorie"];
+                listeEnchere[item].dateHeure = response.data["enchere"][item]["dateHeure"];
+                listeEnchere[item].dateFin = response.data["enchere"][item]["dateFin"];
+                listeEnchere[item].produitEnchere = response.data["enchere"][item]["produitEnchere"];
+                //setMesEncheres(listeEnchere[item]);
+            }
+            setMesEncheres(listeEnchere);
+            //console.log("Mes enchères: "+mesEncheres);
+        });
+        setRechargement(0);
+        setProfile(0);
+        setListe(1);
+        setAccueil(1);
+    }
+
+    function ViewHome() {
+        setRechargement(0);
+        setProfile(0);
+        setListe(0);
+        setAccueil(0);
     }
 
     return (
@@ -216,6 +250,11 @@ const AccueilComponent = () => {
                                 <IonList>
                                     <IonItem>
                                         <IonMenuToggle>
+                                            <IonLabel onClick={ViewHome}>Home</IonLabel>
+                                        </IonMenuToggle>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonMenuToggle>
                                             <IonLabel onClick={ViewRechargement}>Rechargement</IonLabel>
                                         </IonMenuToggle>
                                     </IonItem>
@@ -229,7 +268,7 @@ const AccueilComponent = () => {
                                             <IonLabel onClick={ViewProfile}>Profile</IonLabel>
                                         </IonMenuToggle>
                                     </IonItem>
-        
+
                                     <IonItem>
                                         <IonLabel onClick={logout}>Log out</IonLabel>
                                     </IonItem>
@@ -239,17 +278,25 @@ const AccueilComponent = () => {
                                 </IonList>
                             </IonContent>
                         </IonMenu>
-                        <div id="main-content">
-                            <IonHeader>
+                        <>
+                            <IonHeader id="main-content">
                                 <IonToolbar>
                                     <IonButtons slot="start" >
                                         <IonMenuButton></IonMenuButton>
                                     </IonButtons>
                                     <IonGrid>
                                         <IonRow>
-                                            <IonCol>
-                                                <IonTitle>Ventes aux enchères</IonTitle>
+                                            <IonCol size="8">
+                                                <IonTitle><b>Enchèritude</b></IonTitle>
                                             </IonCol>
+                                            <IonCol size="4">
+                                                <IonFab onClick={openModal} vertical="center" horizontal="start" id="fab">
+                                                    <IonFabButton style={{ width: "40px", height : "40px" }}>
+                                                        <IonIcon icon={add}></IonIcon>
+                                                    </IonFabButton>
+                                                </IonFab>
+                                            </IonCol>
+
                                         </IonRow>
                                     </IonGrid>
                                 </IonToolbar>
@@ -258,9 +305,14 @@ const AccueilComponent = () => {
                                 </IonToolbar>
                             </IonHeader>
                             <h1></h1>
-                        </div>
+                        </>
                         <IonContent>
-                            <div>
+                            <>
+                                {
+                                    accueil === 0 ?
+                                        <img src="image/sary.jpg" />
+                                        : ''
+                                }
                                 {
                                     rechargement === 1 ?
                                         <Tab2 />
@@ -275,18 +327,12 @@ const AccueilComponent = () => {
                                 }
                                 {
                                     profile === 1 ?
-                                    <>
-                                        <Profile profile={monProfile} solde={solde}></Profile>
-                                    </>
-                                    :''
+                                        <>
+                                            <Profile profile={monProfile} solde={solde}></Profile>
+                                        </>
+                                        : ''
                                 }
-                                <IonFab slot="start" vertical="center" horizontal="end" onClick={openModal}>
-                                    <IonFabButton>
-                                        <IonIcon icon={add}></IonIcon>
-                                    </IonFabButton>
-                                </IonFab>
-
-                            </div>
+                            </>
                         </IonContent>
                     </>
                     : <Login />
@@ -309,7 +355,7 @@ const AccueilComponent = () => {
                         <IonItem>
                             <IonLabel><b>Catégorie :</b></IonLabel>
                             <IonSelect placeholder="Catégorie" name="categorie" onIonChange={handleChange}>
-                                {categorie?.map((value1: string, j: number) => {
+                                {categorie ?.map((value1: string, j: number) => {
                                     return (
                                         <div key={j}>
                                             <IonSelectOption value={categorie[j]["id"]}>{categorie[j]["categorie"]}</IonSelectOption>
@@ -321,7 +367,7 @@ const AccueilComponent = () => {
                         <IonItem>
                             <IonLabel><b>Produit :</b></IonLabel>
                             <IonSelect placeholder="Produit" name="produit" onIonChange={handleChange}>
-                                {produit?.map((value1: string, j: number) => {
+                                {produit ?.map((value1: string, j: number) => {
                                     return (
                                         <div key={j}>
                                             <IonSelectOption value={produit[j]["id"]}>{produit[j]["produit"]}</IonSelectOption>

@@ -23,6 +23,7 @@ import { useState, useEffect } from 'react';
 import { camera, closeCircleOutline } from 'ionicons/icons';
 import Login from '../pages/Login';
 import { ajoutPhoto, usePhotoGallery } from '../pages/Photo';
+import './ListeComponent.css';
 
 const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
     const { photos, takePhoto } = usePhotoGallery();
@@ -47,7 +48,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
         getAllPhoto(idEnchere);
         setIsOpen(true);
     }
-    function getAllPhoto(idEnchere:number){
+    function getAllPhoto(idEnchere: number) {
         axios.get("http://localhost:4444/getPhotoEnchere/" + idEnchere).then((response) => {
             console.log(response.data["photo"]);
             setPhotos(response.data["photo"]);
@@ -83,7 +84,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
             {sessionStorage.getItem("TokenUtilisateur") != null ?
                 <div>
                     {
-                        mesEncheres?.map((value1: string, j: number) => {
+                        mesEncheres ?.map((value1: string, j: number) => {
                             return (
                                 <div key={j}>
                                     <IonCard color="warning">
@@ -121,7 +122,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                         info != null ?
                             <IonCard>
                                 <IonItem>
-                                    {photos1?.map((value1: string, j: number) => {
+                                    {photos1 ?.map((value1: string, j: number) => {
                                         return (
                                             <div key={j}>
                                                 {j === 0 ?
@@ -186,10 +187,16 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                                         <IonLabel><b>Durée :</b>{info[0].duree} j.</IonLabel>
                                     </IonItem>
                                     <IonItem>
-                                        <IonLabel><b>Statut :</b>{info[0].statut}</IonLabel>
-                                    </IonItem>
-                                    <IonItem>
-                                        <IonLabel><b>Montant :</b>{info[0].montant}</IonLabel>
+                                        {
+                                            info[0].statut === "Termine" ?
+                                                <IonLabel><b>Statut : </b><b id="termine">{info[0].statut}</b></IonLabel>
+                                                : ''
+                                        }
+                                        {
+                                            info[0].statut === "En cours" ?
+                                                <IonLabel><b>Statut : </b><b id="enCours">{info[0].statut}</b></IonLabel>
+                                                : ''
+                                        }
                                     </IonItem>
                                 </IonCardContent>
                             </IonCard>

@@ -1,0 +1,19 @@
+:root {
+    /* Set the background of the entire app */
+    /*--ion-background-color: #ff3700;*/
+  
+    /* Set the font family of the entire app */
+    --ion-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', sans-serif;
+}
+
+.ios {
+    --ion-text-color: rgb(0, 0, 0);
+  }
+
+ion-header {
+    --ion-background-color: rgb(252, 148, 44);
+}
+
+ion-searchbar {
+    --ion-background-color: rgb(255, 255, 255);
+}
