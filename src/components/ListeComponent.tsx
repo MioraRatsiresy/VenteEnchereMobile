@@ -44,6 +44,10 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                 console.log(info[0].libelle);
             }
         });
+        getAllPhoto(idEnchere);
+        setIsOpen(true);
+    }
+    function getAllPhoto(idEnchere:number){
         axios.get("http://localhost:4444/getPhotoEnchere/" + idEnchere).then((response) => {
             console.log(response.data["photo"]);
             setPhotos(response.data["photo"]);
@@ -52,7 +56,6 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                 console.log(photos1[0].photo);
             }
         });
-        setIsOpen(true);
     }
 
     useEffect(() => {
@@ -71,6 +74,8 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
             console.log(res);
             takePhoto(-3);
         });
+        setIsOpen(false);
+        openModal(id);
     }
 
     return (
