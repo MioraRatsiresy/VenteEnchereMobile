@@ -3,11 +3,8 @@ import { isPlatform } from '@ionic/react';
 
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory } from '@capacitor/filesystem';
-import { Preferences } from '@capacitor/preferences';
 import { Capacitor } from '@capacitor/core';
-import axios from 'axios';
 
-const PHOTO_STORAGE = 'photos';
 
 export function usePhotoGallery() {
     const savePicture = async (photo: Photo, fileName: string, id: number): Promise<UserPhoto> => {
@@ -21,19 +18,19 @@ export function usePhotoGallery() {
         } else {
             base64Data = await base64FromPath(photo.webPath!);
         }
+        console.log(base64Data);
         const savedFile = await Filesystem.writeFile({
             path: fileName,
             data: base64Data,
             directory: Directory.Data,
         });
-        console.log(base64Data);
-        test(base64Data, id);
         if (isPlatform('hybrid')) {
             // Display the new image by rewriting the 'file://' path to HTTP
             // Details: https://ionicframework.com/docs/building/webview#file-protocol
             return {
                 filepath: savedFile.uri,
                 webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+                base64: base64Data,
             };
         }
         else {
@@ -42,45 +39,51 @@ export function usePhotoGallery() {
             return {
                 filepath: fileName,
                 webviewPath: photo.webPath,
+                base64: base64Data,
             };
         }
     };
+
+
     // open camera
-    const takePhoto = async (id: number) => {
-        const photo = await Camera.getPhoto({
-            resultType: CameraResultType.Uri,
-            source: CameraSource.Camera,
-            quality: 100,
-        });
-        const fileName = new Date().getTime() + '.jpeg';
-        const savedFileImage = await savePicture(photo, fileName, id);
-        const newPhotos = [
-            savedFileImage,
-            ...photos,
-        ];
-        setPhotos(newPhotos);
-        Preferences.set({ key: PHOTO_STORAGE, value: JSON.stringify(newPhotos) });
+    const takePhoto = async (id: any) => {
+        if (id == null) {
+            const photo = await Camera.getPhoto({
+                resultType: CameraResultType.Uri,
+                source: CameraSource.Camera,
+                quality: 100,
+            });
+            const fileName = new Date().getTime() + '.jpeg';
+            const savedFileImage = await savePicture(photo, fileName, id);
+            const newPhotos = [
+                savedFileImage,
+                ...photos,
+            ];
+            setPhotos(newPhotos);
+        }
+        else if(id!=null && id>0) {
+            removeItem(id);
+            console.log(photos.length);
+        }
+        else {
+            removeAllItem();
+        }
+
+        // Preferences.remove({ key: PHOTO_STORAGE });
     };
+
+    function removeItem(index: any) {
+        const arraytemp = [...photos];
+        console.log(JSON.stringify(arraytemp));
+        arraytemp.splice(index, 1)
+        setPhotos(arraytemp);
+    }
+
+    function removeAllItem() {
+        setPhotos([]);
+    }
+
     const [photos, setPhotos] = useState<UserPhoto[]>([]);
-    useEffect(() => {
-        const loadSaved = async () => {
-            const { value } = await Preferences.get({ key: PHOTO_STORAGE });
-            const photosInPreferences = (value ? JSON.parse(value) : []) as UserPhoto[];
-            // If running on the web...
-            if (!isPlatform('hybrid')) {
-                for (let photo of photosInPreferences) {
-                    const file = await Filesystem.readFile({
-                        path: photo.filepath,
-                        directory: Directory.Data,
-                    });
-                    // Web platform only: Load the photo as base64 data
-                    photo.webviewPath = `data:image/jpeg;base64,${file.data}`;
-                }
-            }
-            setPhotos(photosInPreferences);
-        };
-        loadSaved();
-    }, []);
 
     return {
         photos,
@@ -109,18 +112,16 @@ export async function base64FromPath(path: string): Promise<string> {
 export interface UserPhoto {
     filepath: string;
     webviewPath?: string;
+    base64: string;
 }
 
 
-export function test(base64image: string, id: number) {
-    console.log("Ity ilay sary : " + base64image);
-    fetch(`http://192.168.150.182:4444/insertPhoto/`+sessionStorage.getItem("idUser")+`/` + sessionStorage.getItem("TokenUtilisateur"), {
-            method: 'POST',
-            body: base64image
-        }
-    );
-    console.log("Eto");
-    // axios.post('http://192.168.150.182:4444/insertPhoto/1/' + sessionStorage.getItem("TokenUtilisateur")+"/"+base64image).then((res) => {
-    //     console.log(res);
-    // });
+export function ajoutPhoto(id: any, base64image: any) {
+    fetch(`http://localhost:4444/insertPhoto/` + id + `/` + sessionStorage.getItem("TokenUtilisateur"), {
+        method: 'POST',
+        body: base64image
+    }
+    ).then((res) => {
+        console.log(res);
+    });
 }

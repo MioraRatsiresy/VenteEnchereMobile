@@ -43,7 +43,6 @@ import Login from '../pages/Login';
 import axios from 'axios';
 import ListeComponent from './ListeComponent';
 import MesEncheres from '../modele/MesEncheres';
-import { usePhotoGallery } from '../pages/Photo';
 
 const AccueilComponent = () => {
     const [deconnecte, setDeconnecte] = useState(0);
@@ -55,10 +54,9 @@ const AccueilComponent = () => {
     const [inputs, setInputs] = useState({});
     const [produit, setProduit] = useState<any | null>(null);
     const [succes, setSucces] = useState(0);
-    const { photos, takePhoto } = usePhotoGallery();
     const [cameraPhoto, setCamera] = useState(0);
 
-    function openCamera(){
+    function openCamera() {
         console.log("Camera");
         //setCamera(1);
         //setIsOpen(false);
@@ -69,7 +67,7 @@ const AccueilComponent = () => {
     }
 
     function openModal() {
-        axios.get("http://192.168.150.182:4444/listecategorie").then((response) => {
+        axios.get("http://localhost:4444/listecategorie").then((response) => {
             setCategorie(response.data["categorie"]);
             if (categorie != null) {
                 console.log(categorie[0]["categorie"]);
@@ -91,7 +89,7 @@ const AccueilComponent = () => {
                 }
             }
         }
-        xmlhttp.open("GET", "http://192.168.150.182:4444/deconnexion");
+        xmlhttp.open("GET", "http://localhost:4444/deconnexion");
         xmlhttp.send();
     }
 
@@ -105,7 +103,7 @@ const AccueilComponent = () => {
         console.log("Mes enchères");
         setRechargement(0);
         setListe(1);
-        axios.get("http://192.168.150.182:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+        axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             //setMesEncheres(response.data["mesEncheres"]);
             // console.log(response.data["mesEncheres"][0]["categorie"]);
             var listeEnchere = Array();
@@ -128,7 +126,7 @@ const AccueilComponent = () => {
     }
 
     function getProduitByCategorie(id: number) {
-        axios.get("http://192.168.150.182:4444/getProduitByCategorie/" + id).then((response) => {
+        axios.get("http://localhost:4444/getProduitByCategorie/" + id).then((response) => {
             setProduit(response.data["produit"]);
         });
     }
@@ -147,10 +145,10 @@ const AccueilComponent = () => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        axios.post("http://192.168.150.182:4444/insertEnchere/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur"), null, { params: inputs }).then((response) => {
+        axios.post("http://localhost:4444/insertEnchere/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur"), null, { params: inputs }).then((response) => {
             console.log("OK");
             setIsOpen(false);
-            axios.get("http://192.168.150.182:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+            axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
                 //setMesEncheres(response.data["mesEncheres"]);
                 // console.log(response.data["mesEncheres"][0]["categorie"]);
                 var listeEnchere = Array();
@@ -258,13 +256,11 @@ const AccueilComponent = () => {
                 <IonContent className="ion-padding">
 
                     <form onSubmit={handleSubmit}>
-                        
-
 
                         <IonItem>
                             <IonLabel><b>Catégorie :</b></IonLabel>
                             <IonSelect placeholder="Catégorie" name="categorie" onIonChange={handleChange}>
-                                {categorie ?.map((value1: string, j: number) => {
+                                {categorie?.map((value1: string, j: number) => {
                                     return (
                                         <div key={j}>
                                             <IonSelectOption value={categorie[j]["id"]}>{categorie[j]["categorie"]}</IonSelectOption>
@@ -276,7 +272,7 @@ const AccueilComponent = () => {
                         <IonItem>
                             <IonLabel><b>Produit :</b></IonLabel>
                             <IonSelect placeholder="Produit" name="produit" onIonChange={handleChange}>
-                                {produit ?.map((value1: string, j: number) => {
+                                {produit?.map((value1: string, j: number) => {
                                     return (
                                         <div key={j}>
                                             <IonSelectOption value={produit[j]["id"]}>{produit[j]["produit"]}</IonSelectOption>

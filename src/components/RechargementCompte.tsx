@@ -1,17 +1,9 @@
-import { Redirect, Route } from 'react-router-dom';
 import {
-    IonApp,
     IonIcon,
     IonLabel,
-    IonRouterOutlet,
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
-    setupIonicReact,
     IonItem,
     IonInput,
     IonButton,
-    IonAlert,
     IonGrid,
     IonCol,
     IonRow,
@@ -20,11 +12,7 @@ import {
 } from '@ionic/react';
 import axios from "axios";
 import React, { useState } from 'react';
-import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, globe } from 'ionicons/icons';
-import Tab1 from '../pages/Tab1';
-import Tab2 from '../pages/Tab2';
-import Tab3 from '../pages/Tab3';
+import { cashOutline, globe } from 'ionicons/icons';
 import Login from '../pages/Login';
 
 const AccueilComponent: React.FC = () => {
@@ -52,7 +40,7 @@ const AccueilComponent: React.FC = () => {
             })
             setMontant("");
         } else {
-            axios.post("http://192.168.150.182:4444/rechargermoncompte/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur") + "?montant=" + montant).then((response) => {
+            axios.post("http://localhost:4444/rechargermoncompte/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur") + "?montant=" + montant).then((response) => {
                 setMontant("");
                 console.log("Id utilisateur : " + sessionStorage.getItem("idUser"));
                 presentToast({
