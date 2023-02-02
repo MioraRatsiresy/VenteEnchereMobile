@@ -1,80 +1,61 @@
-import { Redirect, Route } from 'react-router-dom';
 import {
-    IonApp,
     IonIcon,
     IonLabel,
-    IonRouterOutlet,
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
-    setupIonicReact,
     IonItem,
-    IonInput,
     IonButton,
-    IonAlert,
-    IonGrid,
-    IonCol,
-    IonRow,
-    useIonAlert,
-    useIonToast,
     IonCard,
     IonCardContent,
     IonCardHeader,
     IonCardSubtitle,
     IonCardTitle,
-    IonImg,
-    IonListHeader,
     IonModal,
     IonContent,
     IonHeader,
     IonToolbar,
     IonButtons,
-    IonChip,
     IonTitle,
     IonThumbnail,
     IonFab,
     IonFabButton
 } from '@ionic/react';
 import axios from "axios";
-import React, { useState, useEffect } from 'react';
-import { IonReactRouter } from '@ionic/react-router';
-import { camera, ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, globe, closeCircleOutline } from 'ionicons/icons';
-import Tab1 from '../pages/Tab1';
-import Tab2 from '../pages/Tab2';
-import Tab3 from '../pages/Tab3';
+import { useState, useEffect } from 'react';
+import { camera, closeCircleOutline } from 'ionicons/icons';
 import Login from '../pages/Login';
-import MesEncheres from '../modele/MesEncheres';
-import { usePhotoGallery } from '../pages/Photo';
+import { ajoutPhoto, usePhotoGallery } from '../pages/Photo';
 
 const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
+    const { photos, takePhoto } = usePhotoGallery();
     const [nullite, setNullite] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [info, setInfo] = useState<any | null>(null);
     const [photos1, setPhotos] = useState<any | null>(null);
-    const { photos, takePhoto } = usePhotoGallery();
 
     function closeModal() {
         setIsOpen(false);
     }
 
-
-
     function openModal(idEnchere: number) {
         console.log("idEnchere : " + idEnchere);
         axios.get("http://localhost:4444/infoEnchere/" + idEnchere + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             setInfo(response.data["infoEnchere"]);
+            console.log(response.data["infoEnchere"]);
             if (info != null) {
                 console.log(info[0].libelle);
             }
         });
+        getAllPhoto(idEnchere);
+        setIsOpen(true);
+    }
+    function getAllPhoto(idEnchere:number){
         axios.get("http://localhost:4444/getPhotoEnchere/" + idEnchere).then((response) => {
+            console.log(response.data["photo"]);
             setPhotos(response.data["photo"]);
             if (photos1 != null) {
                 console.log("null");
                 console.log(photos1[0].photo);
             }
         });
-        setIsOpen(true);
     }
 
     useEffect(() => {
@@ -87,13 +68,22 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
             setNullite(2);
         }
     })
+    function insertPhoto(id: any) {
+        console.log(JSON.stringify(photos));
+        axios.post("http://localhost:4444/insertPhoto/" + id + "/" + sessionStorage.getItem("TokenUtilisateur"), photos).then((res) => {
+            console.log(res);
+            takePhoto(-3);
+        });
+        setIsOpen(false);
+        openModal(id);
+    }
 
     return (
         <>
             {sessionStorage.getItem("TokenUtilisateur") != null ?
                 <div>
                     {
-                        mesEncheres ?.map((value1: string, j: number) => {
+                        mesEncheres?.map((value1: string, j: number) => {
                             return (
                                 <div key={j}>
                                     <IonCard color="warning">
@@ -131,15 +121,15 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                         info != null ?
                             <IonCard>
                                 <IonItem>
-                                    {photos1 ?.map((value1: string, j: number) => {
+                                    {photos1?.map((value1: string, j: number) => {
                                         return (
                                             <div key={j}>
                                                 {j === 0 ?
-                                                    <img src={`data:image/jpeg;base64,${photos1[j]["photo"]}`} />
+                                                    <img src={photos1[j]["photo"]} alt="zety" />
                                                     :
 
                                                     <IonThumbnail slot="start">
-                                                        <img src={`data:image/jpeg;base64,${photos1[j]["photo"]}`} />
+                                                        <img src={photos1[j]["photo"]} alt="zety" />
                                                     </IonThumbnail>
 
                                                 }
@@ -149,6 +139,32 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                                 </IonItem>
                                 <IonCardHeader>
                                     <IonItem>
+                                        <IonFab slot="start" vertical="center" horizontal="end">
+                                            <IonFabButton onClick={() => takePhoto(null)}>
+                                                <IonIcon icon={camera}></IonIcon>
+                                            </IonFabButton>
+                                        </IonFab>
+                                    </IonItem>
+                                    {
+                                        photos.length > 0 ?
+                                            <>
+                                                {
+                                                    photos.map((value: any, id: number) => {
+                                                        return (
+                                                            <>
+                                                                <p key={id}><IonButton onClick={() => takePhoto(id)}><IonIcon icon={closeCircleOutline}> </IonIcon></IonButton><img src={photos[id].webviewPath} alt="Img" width={100}></img></p>
+                                                            </>
+                                                        );
+                                                    })
+                                                }
+                                                <IonButton onClick={insertPhoto.bind(this, info[0].idEnchere)}>Insérer</IonButton>
+                                            </>
+
+
+                                            :
+                                            ''
+                                    }
+                                    <IonItem>
                                         <IonCardTitle><b>{info[0].libelle}</b></IonCardTitle>
                                     </IonItem>
                                     <IonItem>
@@ -157,13 +173,6 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                                 </IonCardHeader>
 
                                 <IonCardContent>
-                                    <IonItem>
-                                        <IonFab slot="start" vertical="center" horizontal="end">
-                                            <IonFabButton onClick={() => takePhoto(1)}>
-                                                <IonIcon icon={camera}></IonIcon>
-                                            </IonFabButton>
-                                        </IonFab>
-                                    </IonItem>
                                     <IonItem>
                                         <IonLabel><b>Date début :</b>{info[0].dateHeure}</IonLabel>
                                     </IonItem>

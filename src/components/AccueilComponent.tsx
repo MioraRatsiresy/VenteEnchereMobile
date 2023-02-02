@@ -46,7 +46,6 @@ import Login from '../pages/Login';
 import axios from 'axios';
 import ListeComponent from './ListeComponent';
 import MesEncheres from '../modele/MesEncheres';
-import { usePhotoGallery } from '../pages/Photo';
 import Profile from './Profile';
 
 const AccueilComponent = () => {
@@ -59,7 +58,6 @@ const AccueilComponent = () => {
     const [inputs, setInputs] = useState({});
     const [produit, setProduit] = useState<any | null>(null);
     const [succes, setSucces] = useState(0);
-    const { photos, takePhoto } = usePhotoGallery();
     const [cameraPhoto, setCamera] = useState(0);
     const [profile, setProfile] = useState(0);
     const [monProfile, setMonProfile] = useState<any | null>(null);
@@ -256,7 +254,7 @@ const AccueilComponent = () => {
                                     </IonGrid>
                                 </IonToolbar>
                                 <IonToolbar>
-                                    <IonSearchbar name="mot" onIonChange={handleSearch}></IonSearchbar>
+                                    <IonSearchbar onIonChange={handleSearch}></IonSearchbar>
                                 </IonToolbar>
                             </IonHeader>
                             <h1></h1>
@@ -308,12 +306,10 @@ const AccueilComponent = () => {
 
                     <form onSubmit={handleSubmit}>
 
-
-
                         <IonItem>
                             <IonLabel><b>Catégorie :</b></IonLabel>
                             <IonSelect placeholder="Catégorie" name="categorie" onIonChange={handleChange}>
-                                {categorie ?.map((value1: string, j: number) => {
+                                {categorie?.map((value1: string, j: number) => {
                                     return (
                                         <div key={j}>
                                             <IonSelectOption value={categorie[j]["id"]}>{categorie[j]["categorie"]}</IonSelectOption>
@@ -325,7 +321,7 @@ const AccueilComponent = () => {
                         <IonItem>
                             <IonLabel><b>Produit :</b></IonLabel>
                             <IonSelect placeholder="Produit" name="produit" onIonChange={handleChange}>
-                                {produit ?.map((value1: string, j: number) => {
+                                {produit?.map((value1: string, j: number) => {
                                     return (
                                         <div key={j}>
                                             <IonSelectOption value={produit[j]["id"]}>{produit[j]["produit"]}</IonSelectOption>
