@@ -1,13 +1,12 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonToast, useIonAlert } from '@ionic/react';
+import { useIonToast, useIonAlert } from '@ionic/react';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import axios from "axios";
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
-import { personCircle, checkmarkDone } from "ionicons/icons";
-import { useHistory } from "react-router-dom";
-import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
-import ExploreContainer from './ExploreContainer';
+import { personCircle } from "ionicons/icons";
+import { IonItem, IonLabel, IonInput, IonButton, IonIcon } from '@ionic/react';
 import Home from '../pages/Home';
+import { Utilisateur } from '../modele/Utilisateur';
 
 const LoginComponent: React.FC = () => {
     const [email, setEmail] = useState<any>(null);
@@ -22,16 +21,44 @@ const LoginComponent: React.FC = () => {
     const [contact, setContact] = useState<any>(null);
     const [identifiant, setIdentifiant] = useState<any>(null);
     const [mdp, setMdp] = useState<any>(null);
+    const [login, setLogin] = useState<any>(null);
 
     useEffect(() => {
-        setEmail("Mbola");
-        setPwd("mbola");
-    })
-
+        var temp = new Utilisateur();
+        temp.identifiant = "Mbola";
+        temp.pwd = "mbola";
+        setLogin(temp);
+    }, []);
+    const handleChange = (event: any) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        console.log(name);
+        var temp = new Utilisateur();
+        if (login !== null) {
+            if (name === "identifiant") {
+                temp.identifiant = value;
+                temp.pwd = login.pwd;
+            }
+            else if (name === "pwd") {
+                temp.identifiant = login.identifiant;
+                temp.pwd = value;
+            }
+        }
+        setLogin(temp);
+    }
     function validerFormulaire() {
+        var emaildocument = document.getElementById('identifiant');
+        var pwddocument = document.getElementById('pwd');
+        let pwd = "";
+        let identifiant = "";
+        if (emaildocument != null && pwddocument != null) {
+            pwd = (pwddocument as HTMLInputElement).value;
+            identifiant = (emaildocument as HTMLInputElement).value;
+        }
+        console.log(identifiant);
+        console.log(pwd);
         try {
-            //alert("Coord " + x + " " + y);
-            axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/login/traitementClient?identifiant=" + email + "&pwd=" + pwd).then((response) => {
+            axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/login/traitementClient?identifiant=" + identifiant + "&pwd=" + pwd).then((response) => {
                 if (response.data['message'] === "Login correcte") {
                     sessionStorage.setItem("TokenUtilisateur", response.data['token']);
                     sessionStorage.setItem("idUser", response.data['iduser']);
@@ -56,11 +83,6 @@ const LoginComponent: React.FC = () => {
             })
             setEmail("");
             setPwd("");
-            /*presentToast({
-                message: 'Identifiant:' + email + ", Password=" + pwd,
-                duration: 3000,
-                icon: checkmarkDone
-            })*/
         } catch (e) {
             alert("Exception : " + e);
         }
@@ -80,7 +102,7 @@ const LoginComponent: React.FC = () => {
 
     function validerInscription() {
         if (nom != null && prenom != null && contact != null && identifiant != null && mdp != null) {
-            axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/inscriptionClient?nom="+nom+"&prenom="+prenom+"&contact="+contact+"&identifiant=" + identifiant + "&pwd=" + mdp).then((response) => {
+            axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/inscriptionClient?nom=" + nom + "&prenom=" + prenom + "&contact=" + contact + "&identifiant=" + identifiant + "&pwd=" + mdp).then((response) => {
                 sessionStorage.setItem("TokenUtilisateur", response.data['token']);
                 sessionStorage.setItem("idUser", response.data['iduser']);
                 setPage(1);
@@ -123,31 +145,37 @@ const LoginComponent: React.FC = () => {
                                 />
                             </IonCol>
                         </IonRow>
-                        <IonRow>
-                            <IonCol>
-                                <IonItem>
-                                    <IonLabel position="floating"> Identifiant</IonLabel>
-                                    <IonInput value={email} onIonChange={(e: any) => setEmail(e.target.value)} type="text"></IonInput>
-                                </IonItem>
-                            </IonCol>
-                        </IonRow>
+                        {login != null ?
+                            <>
+                                <IonRow>
+                                    <IonCol>
+                                        <IonItem>
+                                            <IonLabel position="floating"> Identifiant</IonLabel>
+                                            <IonInput value={login.identifiant} id="identifiant" type="text" onChange={handleChange}></IonInput>
+                                        </IonItem>
+                                    </IonCol>
+                                </IonRow>
 
-                        <IonRow>
-                            <IonCol>
-                                <IonItem>
-                                    <IonLabel position="floating"> Mot de passe</IonLabel>
-                                    <IonInput value={pwd} onIonChange={(e: any) => setPwd(e.target.value)} type="password"></IonInput>
-                                </IonItem>
-                            </IonCol>
-                        </IonRow>
-                        <IonRow>
-                            <IonCol>
-                                <IonButton expand="block" onClick={validerFormulaire}>Login</IonButton>
-                                <p style={{ fontSize: "medium" }}>
-                                    Vous n'avez pas encore de compte? <a onClick={viewInscription}><br />Inscrivez-vous ici!</a>😀
-                        </p>
-                            </IonCol>
-                        </IonRow>
+                                <IonRow>
+                                    <IonCol>
+                                        <IonItem>
+                                            <IonLabel position="floating"> Mot de passe</IonLabel>
+                                            <IonInput value={login.pwd} id="pwd" type="password" onChange={handleChange}></IonInput>
+                                        </IonItem>
+                                    </IonCol>
+                                </IonRow>
+                                <IonRow>
+                                    <IonCol>
+                                        <IonButton expand="block" onClick={validerFormulaire}>Login</IonButton>
+                                        <p style={{ fontSize: "medium" }}>
+                                            Vous n'avez pas encore de compte? <a onClick={viewInscription}><br />Inscrivez-vous ici!</a>😀
+                                        </p>
+                                    </IonCol>
+                                </IonRow>
+                            </>
+                            :
+                            ''
+                        }
                     </IonGrid>
                     : ''
             }

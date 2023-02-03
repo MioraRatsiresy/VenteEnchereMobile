@@ -1,13 +1,6 @@
 import {
-    IonApp,
     IonIcon,
     IonLabel,
-    IonRouterOutlet,
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
-    setupIonicReact,
-    IonPage,
     IonMenu,
     IonContent,
     IonHeader,
@@ -20,14 +13,7 @@ import {
     IonFabButton,
     IonButton,
     IonSearchbar,
-    IonCard,
-    IonCardContent,
-    IonCardSubtitle,
-    IonCardHeader,
-    IonCardTitle,
     IonModal,
-    IonChip,
-    IonThumbnail,
     IonSelectOption,
     IonSelect,
     IonInput,
@@ -37,11 +23,8 @@ import {
 } from '@ionic/react';
 import { IonItem, IonList } from '@ionic/react';
 import { useState } from 'react';
-import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add, closeCircleOutline, camera, personCircle, homeOutline, hammerOutline, hammer, cash, personOutline } from 'ionicons/icons';
-import Tab1 from '../pages/Tab1';
+import { home, cashOutline, logOutOutline, add, closeCircleOutline, hammer, personOutline } from 'ionicons/icons';
 import Tab2 from '../pages/Tab2';
-import Tab3 from '../pages/Tab3';
 import Login from '../pages/Login';
 import axios from 'axios';
 import ListeComponent from './ListeComponent';
