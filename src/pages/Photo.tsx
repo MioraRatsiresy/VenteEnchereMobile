@@ -117,7 +117,7 @@ export interface UserPhoto {
 
 
 export function ajoutPhoto(id: any, base64image: any) {
-    fetch(`https://backofficeventeenchere-production-db7d.up.railway.app/insertPhoto/` + id + `/` + sessionStorage.getItem("TokenUtilisateur"), {
+    fetch(`http://192.168.43.108:4444/insertPhoto/` + id + `/` + sessionStorage.getItem("TokenUtilisateur"), {
         method: 'POST',
         body: base64image
     }

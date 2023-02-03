@@ -58,7 +58,7 @@ const LoginComponent: React.FC = () => {
         console.log(identifiant);
         console.log(pwd);
         try {
-            axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/login/traitementClient?identifiant=" + identifiant + "&pwd=" + pwd).then((response) => {
+            axios.post("http://192.168.43.108:4444/login/traitementClient?identifiant=" + identifiant + "&pwd=" + pwd).then((response) => {
                 if (response.data['message'] === "Login correcte") {
                     sessionStorage.setItem("TokenUtilisateur", response.data['token']);
                     sessionStorage.setItem("idUser", response.data['iduser']);
@@ -102,7 +102,7 @@ const LoginComponent: React.FC = () => {
 
     function validerInscription() {
         if (nom != null && prenom != null && contact != null && identifiant != null && mdp != null) {
-            axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/inscriptionClient?nom=" + nom + "&prenom=" + prenom + "&contact=" + contact + "&identifiant=" + identifiant + "&pwd=" + mdp).then((response) => {
+            axios.post("http://192.168.43.108:4444/inscriptionClient?nom=" + nom + "&prenom=" + prenom + "&contact=" + contact + "&identifiant=" + identifiant + "&pwd=" + mdp).then((response) => {
                 sessionStorage.setItem("TokenUtilisateur", response.data['token']);
                 sessionStorage.setItem("idUser", response.data['iduser']);
                 setPage(1);
