@@ -41,7 +41,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
 
     function openModal(idEnchere: number) {
         console.log("idEnchere : " + idEnchere);
-        axios.get("http://192.168.43.108:4444/infoEnchere/" + idEnchere + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+        axios.get("https://backofficeventeenchere-production-db7d.up.railway.app/infoEnchere/" + idEnchere + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             setInfo(response.data["infoEnchere"]);
             console.log(response.data["infoEnchere"]);
             if (info != null) {
@@ -52,7 +52,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
         setIsOpen(true);
     }
     function getAllPhoto(idEnchere: number) {
-        axios.get("http://192.168.43.108:4444/getPhotoEnchere/" + idEnchere).then((response) => {
+        axios.get("https://backofficeventeenchere-production-db7d.up.railway.app/getPhotoEnchere/" + idEnchere).then((response) => {
             console.log(response.data["photo"]);
             setPhotos(response.data["photo"]);
             if (photos1 != null) {
@@ -74,7 +74,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
     })
     function insertPhoto(id: any) {
         console.log(JSON.stringify(photos));
-        axios.post("http://192.168.43.108:4444/insertPhoto/" + id + "/" + sessionStorage.getItem("TokenUtilisateur"), photos).then((res) => {
+        axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/insertPhoto/" + id + "/" + sessionStorage.getItem("TokenUtilisateur"), photos).then((res) => {
             console.log(res);
             takePhoto(-3);
         });

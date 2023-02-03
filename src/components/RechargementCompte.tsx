@@ -41,7 +41,7 @@ const AccueilComponent: React.FC = () => {
             })
             setMontant("");
         } else {
-            axios.post("http://192.168.43.108:4444/rechargermoncompte/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur") + "?montant=" + montant).then((response) => {
+            axios.post("https://backofficeventeenchere-production-db7d.up.railway.app/rechargermoncompte/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur") + "?montant=" + montant).then((response) => {
                 setMontant("");
                 console.log("Id utilisateur : " + sessionStorage.getItem("idUser"));
                 presentToast({
