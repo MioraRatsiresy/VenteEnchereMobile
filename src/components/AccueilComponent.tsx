@@ -424,7 +424,7 @@ const AccueilComponent = () => {
                         </IonItem>
                         <IonItem>
                             <IonLabel position="floating">Durée</IonLabel>
-                            <IonInput type="text" name="duree" onIonChange={handleChange}></IonInput>
+                            <IonInput type="number" name="duree" onIonChange={handleChange}></IonInput>
                         </IonItem>
 
                         <IonButton color="success" expand="block" type="submit">Valider</IonButton>
