@@ -76,7 +76,7 @@ const AccueilComponent = () => {
     }
 
     function openModal() {
-        axios.get("http://localhost:4444/listecategorie").then((response) => {
+        axios.get("http://192.168.169.77:4444/listecategorie").then((response) => {
             setCategorie(response.data["categorie"]);
             console.log("Categorie : " + response.data["categorie"][0]["categorie"]);
             if (categorie != null) {
@@ -100,7 +100,7 @@ const AccueilComponent = () => {
                 }
             }
         }
-        xmlhttp.open("GET", "http://localhost:4444/deconnexion");
+        xmlhttp.open("GET", "http://192.168.169.77:4444/deconnexion");
         xmlhttp.send();
     }
 
@@ -118,7 +118,7 @@ const AccueilComponent = () => {
         setListe(1);
         setProfile(0);
         setAccueil(1);
-        axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+        axios.get("http://192.168.169.77:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             //setMesEncheres(response.data["mesEncheres"]);
             // console.log(response.data["mesEncheres"][0]["categorie"]);
             var listeEnchere = Array();
@@ -141,7 +141,7 @@ const AccueilComponent = () => {
     }
 
     function getProduitByCategorie(id: number) {
-        axios.get("http://localhost:4444/getProduitByCategorie/" + id).then((response) => {
+        axios.get("http://192.168.169.77:4444/getProduitByCategorie/" + id).then((response) => {
             setProduit(response.data["produit"]);
         });
     }
@@ -160,10 +160,10 @@ const AccueilComponent = () => {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        axios.post("http://localhost:4444/insertEnchere/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur"), null, { params: inputs }).then((response) => {
+        axios.post("http://192.168.169.77:4444/insertEnchere/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur"), null, { params: inputs }).then((response) => {
             console.log("OK");
             setIsOpen(false);
-            axios.get("http://localhost:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+            axios.get("http://192.168.169.77:4444/listeMesEncheres/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
                 //setMesEncheres(response.data["mesEncheres"]);
                 // console.log(response.data["mesEncheres"][0]["categorie"]);
                 var listeEnchere = Array();
@@ -189,11 +189,11 @@ const AccueilComponent = () => {
 
     function ViewProfile() {
         console.log("Profile");
-        axios.get("http://localhost:4444/getClientById/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
+        axios.get("http://192.168.169.77:4444/getClientById/" + sessionStorage.getItem("idUser") + "/" + sessionStorage.getItem("TokenUtilisateur")).then((response) => {
             setMonProfile(response.data["client"]);
             console.log("Personne : " + response.data["client"][0]["prenom"]);
         });
-        axios.get("http://localhost:4444/getSoldeClient/" + sessionStorage.getItem("idUser")).then((response) => {
+        axios.get("http://192.168.169.77:4444/getSoldeClient/" + sessionStorage.getItem("idUser")).then((response) => {
             setSolde(response.data["solde"]);
             console.log("Solde : " + response.data["solde"][0]["solde"]);
         });
@@ -206,7 +206,7 @@ const AccueilComponent = () => {
     const handleSearch = (event: any) => {
         const val = event.target.value;
         console.log(val);
-        axios.get("http://localhost:4444/rechercheAvanceFront", { params: { "search": val } }).then((response) => {
+        axios.get("http://192.168.169.77:4444/rechercheAvanceFront", { params: { "search": val } }).then((response) => {
             var listeEnchere = Array();
             console.log(response.data["enchere"]);
             for (var item = 0; item < response.data["enchere"].length; item++) {
