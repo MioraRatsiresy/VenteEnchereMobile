@@ -302,6 +302,7 @@ const AccueilComponent = () => {
                                             </IonGrid>
                                         </IonMenuToggle>
                                     </IonItem>
+                                    <p>ETU : 1502,1391</p>
                                     <IonMenuToggle>
                                         <IonButton>Close menu</IonButton>
                                     </IonMenuToggle>
@@ -317,7 +318,7 @@ const AccueilComponent = () => {
                                     <IonGrid>
                                         <IonRow>
                                             <IonCol size="8">
-                                                <IonTitle><b>Enchère </b></IonTitle>
+                                                <IonTitle><b>Enchère </b> ETU : 1502,1391</IonTitle>
                                             </IonCol>
                                             <IonCol size="4">
                                                 <IonFab onClick={openModal} vertical="center" horizontal="start" id="fab">
