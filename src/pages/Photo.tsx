@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { isPlatform } from '@ionic/react';
 
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
