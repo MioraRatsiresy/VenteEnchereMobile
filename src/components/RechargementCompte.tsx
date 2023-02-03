@@ -14,6 +14,7 @@ import axios from "axios";
 import React, { useState } from 'react';
 import { cashOutline, globe } from 'ionicons/icons';
 import Login from '../pages/Login';
+import './RechargementCompte.css';
 
 const AccueilComponent: React.FC = () => {
     const [montant, setMontant] = useState<any>(null);
@@ -53,7 +54,7 @@ const AccueilComponent: React.FC = () => {
     }
 
     return (
-        <>
+        <div id="contenu">
             {sessionStorage.getItem("TokenUtilisateur") != null ?
                 <IonGrid>
                     <IonRow>
@@ -63,11 +64,7 @@ const AccueilComponent: React.FC = () => {
                     </IonRow>
                     <IonRow>
                         <IonCol>
-                            <IonIcon
-                                style={{ fontSize: "70px", color: "#528f76" }}
-                                icon={cashOutline}
-                            />
-                            <b><h1>Rechargement de compte</h1></b>
+                            <img src="image/debit.svg" alt=""/>
                         </IonCol>
                     </IonRow>
                     <IonRow>
@@ -80,13 +77,13 @@ const AccueilComponent: React.FC = () => {
                     </IonRow>
                     <IonRow>
                         <IonCol>
-                            <IonButton color="warning" expand="block" onClick={rechargement}>Envoyer</IonButton>
+                            <IonButton color="primary" expand="block" onClick={rechargement}>Envoyer</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
                 : <Login />
             }
-        </>
+        </div>
     );
 };
 

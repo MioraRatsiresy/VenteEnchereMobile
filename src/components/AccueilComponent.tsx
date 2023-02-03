@@ -38,7 +38,7 @@ import {
 import { IonItem, IonList } from '@ionic/react';
 import { useState } from 'react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add, closeCircleOutline, camera, personCircle } from 'ionicons/icons';
+import { ellipse, square, triangle, home, list, addCircleOutline, cashOutline, logOutOutline, add, closeCircleOutline, camera, personCircle, homeOutline, hammerOutline, hammer, cash, personOutline } from 'ionicons/icons';
 import Tab1 from '../pages/Tab1';
 import Tab2 from '../pages/Tab2';
 import Tab3 from '../pages/Tab3';
@@ -250,27 +250,74 @@ const AccueilComponent = () => {
                                 <IonList>
                                     <IonItem>
                                         <IonMenuToggle>
-                                            <IonLabel onClick={ViewHome}>Home</IonLabel>
+                                            <IonGrid>
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonIcon icon={home}></IonIcon>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonLabel onClick={ViewHome}>Home</IonLabel>
+                                                    </IonCol>
+                                                </IonRow>
+                                            </IonGrid>
                                         </IonMenuToggle>
                                     </IonItem>
                                     <IonItem>
                                         <IonMenuToggle>
-                                            <IonLabel onClick={ViewRechargement}>Rechargement</IonLabel>
+                                            <IonGrid>
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonIcon icon={cashOutline}></IonIcon>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonLabel onClick={ViewRechargement}>Rechargement</IonLabel>
+                                                    </IonCol>
+                                                </IonRow>
+                                            </IonGrid>
                                         </IonMenuToggle>
                                     </IonItem>
                                     <IonItem>
                                         <IonMenuToggle>
-                                            <IonLabel onClick={ViewMesEncheres}>Mes enchères</IonLabel>
+                                            <IonGrid>
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonIcon icon={hammer}></IonIcon>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonLabel onClick={ViewMesEncheres}>Mes enchères</IonLabel>
+                                                    </IonCol>
+                                                </IonRow>
+                                            </IonGrid>
                                         </IonMenuToggle>
                                     </IonItem>
                                     <IonItem>
                                         <IonMenuToggle>
-                                            <IonLabel onClick={ViewProfile}>Profile</IonLabel>
+                                            <IonGrid>
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonIcon icon={personOutline}></IonIcon>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonLabel onClick={ViewProfile}>Profile</IonLabel>
+                                                    </IonCol>
+                                                </IonRow>
+                                            </IonGrid>
                                         </IonMenuToggle>
                                     </IonItem>
 
                                     <IonItem>
-                                        <IonLabel onClick={logout}>Log out</IonLabel>
+                                        <IonMenuToggle>
+                                            <IonGrid>
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonIcon icon={logOutOutline}></IonIcon>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonLabel onClick={logout}>Log out</IonLabel>
+                                                    </IonCol>
+                                                </IonRow>
+                                            </IonGrid>
+                                        </IonMenuToggle>
                                     </IonItem>
                                     <IonMenuToggle>
                                         <IonButton>Close menu</IonButton>
@@ -291,7 +338,7 @@ const AccueilComponent = () => {
                                             </IonCol>
                                             <IonCol size="4">
                                                 <IonFab onClick={openModal} vertical="center" horizontal="start" id="fab">
-                                                    <IonFabButton style={{ width: "40px", height : "40px" }}>
+                                                    <IonFabButton style={{ width: "40px", height: "40px" }}>
                                                         <IonIcon icon={add}></IonIcon>
                                                     </IonFabButton>
                                                 </IonFab>
@@ -310,7 +357,15 @@ const AccueilComponent = () => {
                             <>
                                 {
                                     accueil === 0 ?
-                                        <img src="image/sary.jpg" />
+                                        <>
+                                            <img src="image/accueil.jpg" />
+                                            <h1><b>Commencons!</b></h1>
+                                            <br />
+                                            <h5>Vendez rapidement, Réalisez une bonne affaire, Gagnez de la visibilité.</h5>
+                                            <br />
+                                            <br />
+                                            <IonButton color="primary" expand="block" id="commencez" onClick={openModal}>Commencez à vendre</IonButton>
+                                        </>
                                         : ''
                                 }
                                 {

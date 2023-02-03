@@ -16,7 +16,10 @@ import {
     IonTitle,
     IonThumbnail,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    IonRow,
+    IonGrid,
+    IonCol
 } from '@ionic/react';
 import axios from "axios";
 import { useState, useEffect } from 'react';
@@ -87,7 +90,7 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                         mesEncheres ?.map((value1: string, j: number) => {
                             return (
                                 <div key={j}>
-                                    <IonCard color="warning">
+                                    <IonCard color="light">
                                         <IonCardHeader>
                                             <IonCardTitle><b>{mesEncheres[j].libelle}</b></IonCardTitle>
                                             <IonCardSubtitle><b>Produit :</b>{mesEncheres[j].produitEnchere},{mesEncheres[j].categorie}</IonCardSubtitle>
@@ -121,23 +124,28 @@ const ListeComponent = ({ mesEncheres }: { mesEncheres: any }) => {
                     {
                         info != null ?
                             <IonCard>
-                                <IonItem>
-                                    {photos1 ?.map((value1: string, j: number) => {
-                                        return (
-                                            <div key={j}>
-                                                {j === 0 ?
-                                                    <img src={photos1[j]["photo"]} alt="zety" />
-                                                    :
+                                <>
+                                    <IonGrid>
+                                        <IonRow>
+                                            {photos1 ?.map((value1: string, j: number) => {
+                                                return (
+                                                    <div key={j}>
+                                                        {j === 0 ?
+                                                            <IonItem>
+                                                                <img src={photos1[j]["photo"]} alt="zety" />
+                                                            </IonItem>
+                                                            :
+                                                            <IonCol slot="start">
+                                                                <img src={photos1[j]["photo"]} alt="zety" />
 
-                                                    <IonThumbnail slot="start">
-                                                        <img src={photos1[j]["photo"]} alt="zety" />
-                                                    </IonThumbnail>
-
-                                                }
-                                            </div>
-                                        )
-                                    })}
-                                </IonItem>
+                                                            </IonCol>
+                                                        }
+                                                    </div>
+                                                )
+                                            })}
+                                        </IonRow>
+                                    </IonGrid>
+                                </>
                                 <IonCardHeader>
                                     <IonItem>
                                         <IonFab slot="start" vertical="center" horizontal="end">
