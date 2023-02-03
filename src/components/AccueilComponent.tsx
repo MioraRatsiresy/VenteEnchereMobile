@@ -317,7 +317,7 @@ const AccueilComponent = () => {
                                     <IonGrid>
                                         <IonRow>
                                             <IonCol size="8">
-                                                <IonTitle><b>Enchèritude</b></IonTitle>
+                                                <IonTitle><b>Enchère </b></IonTitle>
                                             </IonCol>
                                             <IonCol size="4">
                                                 <IonFab onClick={openModal} vertical="center" horizontal="start" id="fab">
@@ -336,7 +336,7 @@ const AccueilComponent = () => {
                             </IonHeader>
                             <h1></h1>
                         </>
-                        <IonContent>
+                        
                             <>
                                 {
                                     accueil === 0 ?
@@ -371,7 +371,7 @@ const AccueilComponent = () => {
                                         : ''
                                 }
                             </>
-                        </IonContent>
+                        
                     </>
                     : <Login />
             }

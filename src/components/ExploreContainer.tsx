@@ -23,7 +23,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   
 
   return (
-    <IonPage>
+    <>
       {sessionStorage.getItem("TokenUtilisateur") != null ?
         <IonContent fullscreen className="ion-padding ion-text-center" >
           {name === "Login" ?
@@ -45,7 +45,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
         </IonContent>
         : <Login />
       }
-    </IonPage>
+    </>
   );
 };
 

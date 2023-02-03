@@ -140,7 +140,7 @@ const LoginComponent: React.FC = () => {
                         <IonRow>
                             <IonCol>
                                 <IonIcon
-                                    style={{ fontSize: "70px", color: "#0040ff" }}
+                                    style={{ fontSize: "70px", color: "rgb(252, 148, 44)" }}
                                     icon={personCircle}
                                 />
                             </IonCol>
@@ -166,7 +166,7 @@ const LoginComponent: React.FC = () => {
                                 </IonRow>
                                 <IonRow>
                                     <IonCol>
-                                        <IonButton expand="block" onClick={validerFormulaire}>Login</IonButton>
+                                        <IonButton color="warning" expand="block" onClick={validerFormulaire}>Login</IonButton>
                                         <p style={{ fontSize: "medium" }}>
                                             Vous n'avez pas encore de compte? <a onClick={viewInscription}><br />Inscrivez-vous ici!</a>😀
                                         </p>
@@ -195,7 +195,7 @@ const LoginComponent: React.FC = () => {
                         <IonRow>
                             <IonCol>
                                 <IonIcon
-                                    style={{ fontSize: "70px", color: "#0040ff" }}
+                                    style={{ fontSize: "70px", color: "rgb(252, 148, 44)" }}
                                     icon={personCircle}
                                 />
                             </IonCol>
@@ -243,7 +243,7 @@ const LoginComponent: React.FC = () => {
                         </IonRow>
                         <IonRow>
                             <IonCol>
-                                <IonButton expand="block" onClick={validerInscription}>S'inscrire</IonButton>
+                                <IonButton color="warning" expand="block" onClick={validerInscription}>S'inscrire</IonButton>
                                 <p style={{ fontSize: "medium" }}>
                                     <a onClick={viewLogin}><br />Login</a>😀
                                 </p>
